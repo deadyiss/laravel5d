@@ -23,10 +23,29 @@ The full schema and every relationship are documented with Mermaid diagrams in
 
 ```mermaid
 erDiagram
+    USERS ||--o| PROFILES : "has one"
+    TEAMS ||--o{ USERS : "has members"
+    USERS ||--o{ SUBMISSIONS : "makes"
+    USERS ||--o{ WRITEUPS : "writes"
+
+    TEAMS ||--o{ SUBMISSIONS : "submits"
+    TEAMS ||--o{ COMPETITION_TEAM : "registers via"
+    COMPETITIONS ||--o{ COMPETITION_TEAM : "has participants via"
+    TEAMS ||--o{ HINT_UNLOCKS : "unlocks"
+    HINTS ||--o{ HINT_UNLOCKS : "unlocked via"
+
+    COMPETITIONS ||--o{ CHALLENGES : "contains"
+    CATEGORIES ||--o{ CHALLENGES : "groups"
+    CHALLENGES ||--o{ SUBMISSIONS : "receives"
+    CHALLENGES ||--o{ HINTS : "has"
+    CHALLENGES ||--o{ WRITEUPS : "explained by"
+    CHALLENGES ||--o{ CHALLENGE_TAG : "tagged via"
+    TAGS ||--o{ CHALLENGE_TAG : "labels"
+
     USERS {
         bigint id PK
         string name
-        string email
+        string email UK
         string password
         enum role "admin, player"
         bigint team_id FK "nullable"
@@ -40,13 +59,13 @@ erDiagram
     }
     TEAMS {
         bigint id PK
-        string name
-        string invite_code
+        string name UK
+        string invite_code UK
     }
     COMPETITIONS {
         bigint id PK
         string title
-        string slug
+        string slug UK
         text description
         datetime start_at
         datetime end_at
@@ -59,7 +78,7 @@ erDiagram
     }
     CATEGORIES {
         bigint id PK
-        string name
+        string name UK
     }
     CHALLENGES {
         bigint id PK
@@ -74,7 +93,7 @@ erDiagram
     }
     TAGS {
         bigint id PK
-        string name
+        string name UK
     }
     CHALLENGE_TAG {
         bigint challenge_id PK, FK
@@ -107,23 +126,6 @@ erDiagram
         text content
         enum status "draft, published"
     }
-
-    USERS ||--o| PROFILES : "has one"
-    TEAMS ||--o{ USERS : "has members"
-    USERS ||--o{ SUBMISSIONS : makes
-    USERS ||--o{ WRITEUPS : writes
-    TEAMS ||--o{ SUBMISSIONS : submits
-    TEAMS ||--o{ COMPETITION_TEAM : registers
-    COMPETITIONS ||--o{ COMPETITION_TEAM : "has participants"
-    COMPETITIONS ||--o{ CHALLENGES : contains
-    CATEGORIES ||--o{ CHALLENGES : groups
-    CHALLENGES ||--o{ SUBMISSIONS : receives
-    CHALLENGES ||--o{ HINTS : has
-    CHALLENGES ||--o{ WRITEUPS : "explained by"
-    CHALLENGES ||--o{ CHALLENGE_TAG : "tagged with"
-    TAGS ||--o{ CHALLENGE_TAG : labels
-    TEAMS ||--o{ HINT_UNLOCKS : unlocks
-    HINTS ||--o{ HINT_UNLOCKS : "unlocked by"
 ```
 
 ### Relationships Covered
@@ -190,7 +192,7 @@ docs/
 
 ## Roadmap
 
-- [x] Database design and documentation
+- [ ] Database design and documentation
 - [ ] Migrations, models, factories, and seeders
 - [ ] Authentication and role-based access
 - [ ] Team management and competition registration
