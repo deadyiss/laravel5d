@@ -144,6 +144,10 @@ erDiagram
 - Flags are compared using hash verification (`Hash::check`) against `challenges.flag_hash`.
 - Team score = sum of `points` of solved challenges − sum of `cost` of unlocked hints.
 - A team can only submit to challenges of a competition it is registered in, while the competition status is `running`.
+- A team can register for a competition only while its status is `running`, and a draft competition is hidden from players.
+- A hint cannot be unlocked twice, and not after the team has solved that challenge.
+- A player can write a writeup for a challenge only after the player's team has solved it. A draft writeup is visible to its author only.
+- Only `admin` users can create, edit, or delete competitions, challenges, and hints.
 
 ## Tech Stack
 
@@ -177,28 +181,62 @@ php artisan serve
 
 Then open <http://localhost:8000>.
 
+### Demo accounts
+
+`php artisan migrate --seed` also creates a demo competition (`Flagboard Demo CTF`) with sample teams, challenges, and submissions.
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@example.com` | `password` |
+| Player (team member) | `player@example.com` | `password` |
+
+The seeded challenges use the flags `FLAG{demo_1}` to `FLAG{demo_6}` (the number is the category id). Open a challenge as the player to try submitting one.
+
+### Pages
+
+| Page | Who |
+|---|---|
+| `/`, `/competitions`, `/competitions/{id}`, `/competitions/{id}/scoreboard`, `/writeups` | everyone |
+| `/register`, `/login` | guests |
+| `/team`, challenge pages, hints, flag submission, writeup forms | signed-in players |
+| `/admin/competitions`, `/admin/challenges` | `admin` only |
+
+### Running the tests
+
+```bash
+php artisan test
+```
+
+The feature tests cover authentication, roles, teams, competition registration, flag submission, hints, the scoreboard, writeups, and the admin pages.
+
 ## Project Structure
 
 ```
+app/Http/Controllers/  Page controllers (Admin/ for the admin area)
+app/Http/Middleware/   Role check for admin pages
+app/Services/      Scoreboard and team participation rules
 app/Models/        Eloquent models and relationships
 database/
   migrations/      Table definitions
   factories/       Fake data generators
   seeders/         Categories and sample data
 resources/views/   Blade templates
+routes/web.php      All routes
+tests/Feature/     Feature tests
 docs/
   database/        ERD and relationship documentation
+  progress/        Phase tracker (P01, P02, ...)
 ```
 
 ## Roadmap
 
-- [ ] Database design and documentation
-- [ ] Migrations, models, factories, and seeders
-- [ ] Authentication and role-based access
-- [ ] Team management and competition registration
-- [ ] Challenge CRUD and flag submission
-- [ ] Hints and scoreboard
-- [ ] Writeups
+- [x] Database design and documentation
+- [x] Migrations, models, factories, and seeders
+- [x] Authentication and role-based access
+- [x] Team management and competition registration
+- [x] Challenge CRUD and flag submission
+- [x] Hints and scoreboard
+- [x] Writeups
 
 ## Author
 
