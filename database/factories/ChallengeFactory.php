@@ -22,7 +22,7 @@ class ChallengeFactory extends Factory
             'title' => fake()->sentence(3),
             'description' => fake()->paragraph(),
             'points' => fake()->randomElement([100, 200, 300, 500]),
-            'flag_hash' => Hash::make('FLAG{' . Str::random(12) . '}'),
+            'flag_hash' => Hash::make('FLAG{'.Str::random(12).'}'),
             'difficulty' => fake()->randomElement(['easy', 'medium', 'hard']),
             'is_published' => true,
         ];

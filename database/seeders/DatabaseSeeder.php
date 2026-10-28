@@ -13,6 +13,7 @@ use App\Models\Team;
 use App\Models\User;
 use App\Models\Writeup;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,10 +38,14 @@ class DatabaseSeeder extends Seeder
 
         $teams = Team::factory(3)->create();
 
-        foreach ($teams as $team) {
-            User::factory(2)
-                ->create(['team_id' => $team->id])
-                ->each(fn (User $user) => Profile::factory()->create(['user_id' => $user->id]));
+        foreach ($teams as $index => $team) {
+            $players = User::factory(2)->create(['team_id' => $team->id]);
+
+            if ($index === 0) {
+                $players->first()->update(['name' => 'Player One', 'email' => 'player@example.com']);
+            }
+
+            $players->each(fn (User $user) => Profile::factory()->create(['user_id' => $user->id]));
 
             $competition->teams()->attach($team->id, ['registered_at' => now()]);
         }
@@ -49,6 +54,7 @@ class DatabaseSeeder extends Seeder
             $challenge = Challenge::factory()->create([
                 'competition_id' => $competition->id,
                 'category_id' => $category->id,
+                'flag_hash' => Hash::make('FLAG{demo_'.$category->id.'}'),
             ]);
 
             $challenge->tags()->attach($tags->random(2)->pluck('id'));

@@ -17,7 +17,7 @@ class ProfileFactory extends Factory
             'user_id' => User::factory(),
             'bio' => fake()->sentence(),
             'institution' => fake()->company(),
-            'github_url' => 'https://github.com/' . fake()->unique()->userName(),
+            'github_url' => 'https://github.com/'.fake()->unique()->userName(),
         ];
     }
 }
