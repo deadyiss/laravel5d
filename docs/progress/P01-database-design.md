@@ -6,7 +6,7 @@
 | **Started** | 2026-10-04 |
 | **Completed** | 2026-10-25 |
 | **Branch** | `feature/p01-database-design` |
-| **Pull request** | [PRs by deadyiss](https://github.com/mirzayogy/laravel5d/pulls?q=is%3Apr+author%3Adeadyiss) |
+| **Pull request** | [#46](https://github.com/mirzayogy/laravel5d/pull/46) |
 
 ## Goal
 Design and implement the database of the **Flagboard** CTF competition management platform, focusing on table relationships with Eloquent: One-to-One, One-to-Many, Many-to-Many (with pivot data), and Has-Many-Through.
